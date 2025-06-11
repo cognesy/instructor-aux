@@ -5,7 +5,7 @@ namespace Cognesy\Utils\Web\Scrapers;
 namespace Cognesy\Auxiliary\Web\Scrapers;
 
 use Cognesy\Auxiliary\Web\Contracts\CanGetUrlContent;
-use Cognesy\Utils\Env;
+use Cognesy\Config\Env;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
@@ -16,7 +16,10 @@ class FirecrawlDriver implements CanGetUrlContent
     private string $apiKey;
     private ClientInterface $client;
 
-    public function __construct(string $baseUrl = '', string $apiKey = '') {
+    public function __construct(
+        string $baseUrl = '',
+        string $apiKey = '',
+    ) {
         $this->baseUrl = $baseUrl ?: Env::get('FIRECRAWL_BASE_URI', '');
         $this->apiKey = $apiKey ?: Env::get('FIRECRAWL_API_KEY', '');
         $this->client = new Client();
@@ -32,7 +35,7 @@ class FirecrawlDriver implements CanGetUrlContent
         if (isset($options['render_js'])) {
             $body['waitFor'] = $options['render_js'] ? 1000 : 0;
         }
-        $requestData = [
+        $requestBody = [
             'headers' => [
                 'Authorization' => 'Bearer ' . $this->apiKey,
                 'Content-Type' => 'application/json',
@@ -41,7 +44,7 @@ class FirecrawlDriver implements CanGetUrlContent
             'json' => $body,
         ];
         try {
-            $response = $this->client->request('POST', $this->baseUrl, $requestData);
+            $response = $this->client->request('POST', $this->baseUrl, $requestBody);
             $content = $response->getBody()->getContents();
             $json = json_decode($content, true);
             return $json['data']['html'];
