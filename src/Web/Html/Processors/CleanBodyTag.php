@@ -6,7 +6,9 @@ use Cognesy\Auxiliary\Web\Contracts\CanCleanHtml;
 
 class CleanBodyTag implements CanCleanHtml
 {
+    #[\Override]
     public function process(string $html): string {
-        return preg_replace('/<body[^>]*>/', '<body>', $html);
+        $result = preg_replace('/<body[^>]*>/', '<body>', $html);
+        return is_string($result) ? $result : $html;
     }
 }

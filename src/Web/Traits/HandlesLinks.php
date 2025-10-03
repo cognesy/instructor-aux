@@ -23,10 +23,7 @@ trait HandlesLinks
     }
 
     public function links() : array {
-        if (!isset($this->content)) {
-            return [];
-        }
-        if (!isset($this->links)) {
+        if (empty($this->links)) {
             $this->links = $this->extractLinks($this->content, $this->url);
         }
         return $this->links;

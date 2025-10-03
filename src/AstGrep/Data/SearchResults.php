@@ -6,6 +6,9 @@ use ArrayIterator;
 use Countable;
 use Iterator;
 
+/**
+ * @implements \Iterator<int, SearchResult>
+ */
 class SearchResults implements Countable, Iterator
 {
     private array $results;
@@ -45,14 +48,23 @@ class SearchResults implements Countable, Iterator
         return !$this->isEmpty();
     }
 
+    #[\Override]
     public function count(): int {
         return count($this->results);
     }
 
+    /**
+     * @param callable(SearchResult): bool $callback
+     */
     public function filter(callable $callback): self {
         return new self(array_values(array_filter($this->results, $callback)));
     }
 
+    /**
+     * @template T
+     * @param callable(SearchResult): T $callback
+     * @return array<T>
+     */
     public function map(callable $callback): array {
         return array_map($callback, $this->results);
     }
@@ -99,25 +111,31 @@ class SearchResults implements Countable, Iterator
     }
 
     public function toJson(): string {
-        return json_encode($this->toArray(), JSON_PRETTY_PRINT);
+        $json = json_encode($this->toArray(), JSON_PRETTY_PRINT);
+        return is_string($json) ? $json : '[]';
     }
 
+    #[\Override]
     public function current(): SearchResult {
         return $this->iterator->current();
     }
 
+    #[\Override]
     public function key(): int {
         return $this->iterator->key();
     }
 
+    #[\Override]
     public function next(): void {
         $this->iterator->next();
     }
 
+    #[\Override]
     public function rewind(): void {
         $this->iterator->rewind();
     }
 
+    #[\Override]
     public function valid(): bool {
         return $this->iterator->valid();
     }

@@ -13,6 +13,7 @@ class StripSelectedTags implements CanCleanHtml
         $this->tags = $tags;
     }
 
+    #[\Override]
     public function process(string $html): string
     {
         if (empty($this->tags)) {
@@ -21,6 +22,7 @@ class StripSelectedTags implements CanCleanHtml
 
         $tags = implode('|', $this->tags);
         $pattern = "/<($tags)[^>]*>.*?<\/\\1>/si";
-        return preg_replace($pattern, '', $html);
+        $result = preg_replace($pattern, '', $html);
+        return is_string($result) ? $result : $html;
     }
 }

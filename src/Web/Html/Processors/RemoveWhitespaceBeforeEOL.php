@@ -6,7 +6,9 @@ use Cognesy\Auxiliary\Web\Contracts\CanCleanHtml;
 
 class RemoveWhitespaceBeforeEOL implements CanCleanHtml
 {
+    #[\Override]
     public function process(string $html): string {
-        return preg_replace('/[\t ]+$/m', '', $html);
+        $result = preg_replace('/[\t ]+$/m', '', $html);
+        return is_string($result) ? $result : $html;
     }
 }

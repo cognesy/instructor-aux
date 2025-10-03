@@ -21,8 +21,8 @@ class Webpage implements CanProvideMessage
 
     protected CanGetUrlContent $scraper;
     protected HtmlProcessor $htmlProcessor;
-    protected string $content;
-    protected string $url;
+    protected string $content = '';
+    protected string $url = '';
     /** @var Link[] */
     protected array $links = [];
 
@@ -33,6 +33,7 @@ class Webpage implements CanProvideMessage
         $this->htmlProcessor = new HtmlProcessor();
     }
 
+    #[\Override]
     public function toMessage(): Message {
         return new Message(content: $this->asMarkdown());
     }
